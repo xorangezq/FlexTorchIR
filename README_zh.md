@@ -1,6 +1,6 @@
 # FlexTorchIR
 
-([EN] | [ZH (本文档)])
+([EN](README.md) | [ZH (本文档)](README_zh.md))
 
 FlexTorchIR 是不同于 ONNX 和 `torch.trace` 的一种全新的 pytorch 模型转换方法。
 
@@ -25,6 +25,8 @@ FlexTorchIR 是不同于 ONNX 和 `torch.trace` 的一种全新的 pytorch 模�
 - `ONNX` 格式在开源社区中才有绝对的必要性，如果为闭源项目开发（公司也好其他甲方也好），完全只需要从 pytorch 模型直接转到自己定义的私有格式即可；
 - `torch.trace` 确实设计的不错，也挺好用的，但除了从 torch 底层的角度“打印”一张模型运行时的快照，我们还可以就跟编写、运行一个 pytorch 模型一样，就在同样的 python 代码下，用 `FlexTorchIR` 直接逐层 hook 出来转换。
 
+
+
 ### Installation 安装
 
 ```
@@ -34,6 +36,8 @@ pip install -e .
 
 推荐使用 `-e` ，因为在模型转换的同时，一般都需要同步修改 `FlexTorchIR` 的代码。
 
+
+
 ###  Example 示例
 
 ```bash
@@ -42,7 +46,64 @@ python example_resnet50.py
 # or python example_torchvision.py
 ```
 
-...
+输出如下：
+
+
+
+第一部分，支持的转换，包括：
+
+- 层/算子 类型
+- 层/算子 各项参数
+
+这些信息足够用于构建你自己的私有 IR 层和算子：
+
+```
+Converting resnet50 ...
+DEBUG    | Converting... Conv2d, C3 N64 K7x7 S2x2 P33 D1x1 G1  
+DEBUG    | Converting... BatchNorm2d, N 64 eps 1e-05 momentum 0.1 affine track_stats 
+DEBUG    | Converting... ReLU 
+DEBUG    | Converting... MaxPool2d, K3x3 S2x2 P11 D1x1 ceil?N 
+DEBUG    | Converting... Conv2d, C64 N64 K1x1 S1x1 P00 D1x1 G1  
+DEBUG    | Converting... BatchNorm2d, N 64 eps 1e-05 momentum 0.1 affine track_stats 
+DEBUG    | Converting... ReLU 
+( ... Omitting for readability ... )
+DEBUG    | Converting... Conv2d, C2048 N512 K1x1 S1x1 P00 D1x1 G1  
+DEBUG    | Converting... BatchNorm2d, N 512 eps 1e-05 momentum 0.1 affine track_stats 
+DEBUG    | Converting... ReLU 
+DEBUG    | Converting... Conv2d, C512 N512 K3x3 S1x1 P11 D1x1 G1  
+DEBUG    | Converting... BatchNorm2d, N 512 eps 1e-05 momentum 0.1 affine track_stats 
+DEBUG    | Converting... ReLU 
+DEBUG    | Converting... Conv2d, C512 N2048 K1x1 S1x1 P00 D1x1 G1  
+DEBUG    | Converting... BatchNorm2d, N 2048 eps 1e-05 momentum 0.1 affine track_stats 
+DEBUG    | Converting... ReLU 
+DEBUG    | Converting... AvgPool2d (from Adaptive 1x1), K7x7 S1x1 P00 D1x1 ceil?N countIncludePad 
+INFO     | catched unrecognized func flatten 
+DEBUG    | Converting... FullConnection, C2048 N1000 
+```
+
+
+
+第二部分，不支持的转换，包括：
+
+- 不支持的层/算子 类型
+- 该层的输入和输出 tensor shape
+
+```
+INFO     | [WARNING][TorchConverter] The following Ops are not supported by flexir currently: 
+INFO     | Op: (func op) flatten. Input shapes: 1x2048x1x1, Output shape: 1x2048 
+INFO     | [WARNING][TorchConverter] These Ops has been converted into LayerPlaceholder and are shown in color **RED** in model png. 
+resnet50 success
+```
+
+`FlexTorchIR` 已经支持绝大部分常见的 CV 模型，但在转换实际部署的 AI 模型时，还是经常会遇到一些不支持的层。
+
+别慌！转换已经成功，放轻松：
+
+- `FlexTorchIR` 遇到这些层/算子，并不会出错、退出、异常。它会继续正常转换，就像没遇到错误一样；
+- 所有不支持的层/算子，都会用 `LayerPlaceHolder` 类型来顶替。你可以在转换过后，一个个地添加支持；
+- 你可以在转换过后，对“还需要支持多少算子”这个问题的答案一目了然。这是一个为你工作的工具，而不把你当作工具。你能很轻松的规划自己的工作量，或者调整模型的复杂度，增删哪些层也能一针见血。这样的工作流，就像是 OOP 依赖反转一样。
+
+
 
 ### FlexTorchIR 所不包含的
 
@@ -79,6 +140,8 @@ TODO：
 - [ ] 提供 protobuf 格式，作为默认的目标 IR
 
 (请注意：任何目标 IR 的设计决定，都实际上对最终部署提出了一定的要求和假设。)
+
+
 
 ### License
 
