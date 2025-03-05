@@ -161,14 +161,14 @@ class TorchIR:
                 self.layers[key]._output_loc = len(output_ids_list)+output_loc
                 output_loc += 1
 
-    def buildNetwork(self, ifDraw=True, drawPath='./', device='cpu'):
+    def buildNetwork(self, drawPath='./', device='cpu'):
         from collections import OrderedDict
         from flexir.graph.network import NetGraph
 
         G = NetGraph()
 
         for layer_id, layer in self.layers.items():
-            node_desc = 'ID({0})\nShape{1}'.format(layer_id, tuple(layer._outputs.size()))
+            node_desc = '{}\nShape{}'.format(layer._converted_layer._desc, tuple(layer._outputs.size()))
             G.add_node(str(layer_id), node_desc)
 
         for layer_id in self.layers.keys():
@@ -177,13 +177,6 @@ class TorchIR:
                     G.add_node(str(in_layer_id), 'Input[' + str(in_layer_id) + ']')
 
                 G.add_edge(str(in_layer_id), str(layer_id))
-
-        if ifDraw:
-            try:
-                G.GViz.render(os.path.join(drawPath, 'net_node_shapes'), cleanup=True)
-            except Exception as e:
-                logger.info('[EXCEPTION] {}', e)
-                logger.info('[WARNING][buildNetwork] Install graphviz dot command to draw png.')
 
         sorted_nodes = G.topologicalsort()
 

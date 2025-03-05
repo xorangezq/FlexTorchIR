@@ -96,6 +96,7 @@ Second Part, unrecognized conversion:
 INFO     | [WARNING][TorchConverter] The following Ops are not supported by flexir currently: 
 INFO     | Op: (func op) flatten. Input shapes: 1x2048x1x1, Output shape: 1x2048 
 INFO     | [WARNING][TorchConverter] These Ops has been converted into LayerPlaceholder and are shown in color **RED** in model png. 
+INFO     | Model diagram is generated at flexir_convert_demonstrate/resnet50/resnet50.png | flexir.graph.network:save:54 |
 resnet50 success
 ```
 

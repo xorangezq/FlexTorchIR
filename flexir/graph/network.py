@@ -37,11 +37,12 @@ class NetGraph(object):
         self.nodes[to_node]['from'].append(from_node)
         self.nodes[from_node]['to'].append(to_node)
 
-    def draw(self, path = None):
+    def draw(self, path=None, popImg=False):
         self.GViz.render(path, cleanup=True)
-        img = mpimg.imread(path+'.png', 1)
-        imgplot = plt.imshow(img)
-        plt.show()
+        if popImg:
+            img = mpimg.imread(path+'.png', 1)
+            imgplot = plt.imshow(img)
+            plt.show()
 
     def topologicalsort(self):
         sorted_node = nx.topological_sort(self.G)
@@ -50,6 +51,7 @@ class NetGraph(object):
     def save(self, name, outputDir):
         try:
             self.draw(os.path.join(outputDir, name))
+            logger.info('Model diagram is generated at {}', os.path.join(outputDir, name)+'.png')
         except Exception as e:
             logger.warning('[EXCEPTION] {}', e)
             logger.warning('[buildNetwork] Install graphviz dot command to draw png.')
