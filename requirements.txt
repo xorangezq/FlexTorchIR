@@ -1,0 +1,7 @@
+networkx
+graphviz
+numpy
+torch
+torchvision
+torchaudio
+loguru
