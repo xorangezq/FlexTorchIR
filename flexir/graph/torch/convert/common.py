@@ -471,17 +471,15 @@ def convert_Module_FCNorm(module=None, inputs=None, output=None):
 
 
 def convert_Module_SoftArgMax(module=None, inputs=None, output=None):
-    logger.debug('Converting... SoftArgmax, beta {} size {}',
+    logger.debug('Converting... SoftArgmax, beta {}',
         module.beta,
-        [s for s in module.grid.size()[-2:]],
     )
     return convert_demonstrate(module, inputs, output)
 
 
 def convert_Module_SoftArgMax1D(module=None, inputs=None, output=None):
-    logger.debug('Converting... SoftArgmax1D, beta {} size {}',
+    logger.debug('Converting... SoftArgmax1D, beta {}',
         module.beta,
-        int(list(module.indices.size())[-1]),
     )
     return convert_demonstrate(module, inputs, output)
 

@@ -17,7 +17,6 @@ torch.relu = hooked_just_relu
 torch.nn.functional.relu = hooked_functional_relu
 
 class Demo(torch.nn.Module):
-
     def __init__(self):
         super(Demo, self).__init__()
         self.conv = torch.nn.Conv2d(3, 3, 3, 3)
