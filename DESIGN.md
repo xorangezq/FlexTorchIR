@@ -31,13 +31,13 @@ def tensorID(tensor):
     return str(id(tensor))
 ```
 
-2. `layer.id = tensorID`
+2. `layer.id = output tensor ID`
 
 从而，在 torch model 的一次运行后，所有 layer、tensor 的 ID 可以用来构成完整的网络结构。
 
 
 
-Full network structure could be reconstructed by tracing tensor IDs (also layer's) after a full inference of the torch model.
+Full network structure could be reconstructed by tracing layer's output tensor IDs after a full inference of the torch model.
 
 
 
@@ -88,7 +88,6 @@ def hooked_relu(*args, **kwargs):
 torch.nn.functional.relu = hooked_relu
 
 class Demo(torch.nn.Module):
-
     def __init__(self):
         super(Demo, self).__init__()
         self.conv = torch.nn.Conv2d(3, 3, 3, 3)
@@ -120,7 +119,7 @@ Final question boils down to, how is it possible to provide enough hooks for eac
 def extract_functions_to_hook(self, pymodulename):
     pymodule = eval(pymodulename)
     return ['%s.%s' % (pymodulename, k) for k in dir(pymodule)]
-# simplified version
+# over-simplified version
 ```
 
 
@@ -191,7 +190,6 @@ torch.relu = hooked_just_relu
 torch.nn.functional.relu = hooked_functional_relu
 
 class Demo(torch.nn.Module):
-
     def __init__(self):
         super(Demo, self).__init__()
         self.conv = torch.nn.Conv2d(3, 3, 3, 3)
