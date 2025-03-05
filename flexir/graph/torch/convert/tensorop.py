@@ -391,7 +391,6 @@ def convert_torch_dimension_sampling_info(input_shape=[], py_sampling_infos=[]):
         else:
             raise RuntimeError('Unsupport Type of Dimension Sampling.')
 
-    # end-for
     ASSERT(num_ellipsis <= 1)
     # return sampling_infos
     return convert_demonstrate(func, inputs, output)

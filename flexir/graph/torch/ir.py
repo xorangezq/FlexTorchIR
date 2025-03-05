@@ -177,8 +177,7 @@ class TorchIR:
                     G.add_node(str(in_layer_id), 'Input[' + str(in_layer_id) + ']')
 
                 G.add_edge(str(in_layer_id), str(layer_id))
-            # end-for
-        # end-for
+
         if ifDraw:
             try:
                 G.GViz.render(os.path.join(drawPath, 'net_node_shapes'), cleanup=True)

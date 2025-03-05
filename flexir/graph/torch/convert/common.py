@@ -42,7 +42,6 @@ def recurrent_split_arguments(arguments=[1, [3, [10, 8], [5, 6, 7]]]):
     if isinstance(arguments, tuple) or isinstance(arguments, list):
         for arg in arguments:
             args = args + recurrent_split_arguments(arg)
-        # end-for
     else:
         args.append(arguments)
 
