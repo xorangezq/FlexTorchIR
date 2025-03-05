@@ -30,7 +30,7 @@ FlexTorchIR 是不同于 ONNX 和 `torch.trace` 的一种全新的 pytorch 模�
 ### Installation 安装
 
 ```
-git clone ...
+git clone https://github.com/xorangezq/FlexTorchIR && cd FlexTorchIR
 pip install -e .
 ```
 

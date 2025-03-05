@@ -30,7 +30,7 @@ No AI model conversion is perfect, that said, `FlexTorchIR` could be really help
 ### Installation
 
 ```bash
-git clone ... && cd ...
+git clone https://github.com/xorangezq/FlexTorchIR && cd FlexTorchIR
 pip install -e .
 ```
 
